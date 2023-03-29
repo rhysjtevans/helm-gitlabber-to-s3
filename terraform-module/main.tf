@@ -29,7 +29,7 @@ resource "gitlab_user_sshkey" "main" {
   title      = "gitlabber"
   key        = tls_private_key.clone_key.public_key_openssh
 
-  expires_at = "2016-01-21T00:00:00.000Z"
+  expires_at = "2028-01-21T00:00:00.000Z"
 }
 
 
