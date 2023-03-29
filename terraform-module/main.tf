@@ -2,7 +2,7 @@ variable "k8s_namespace" {
   default = "gitlab"
 }
 variable "k8s_secretrefname" {
-  default = "gitlabber-env"
+  default = "gitlabber-to-s3"
 }
 
 variable "gitlab_url" { }
