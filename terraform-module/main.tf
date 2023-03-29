@@ -6,7 +6,6 @@ variable "k8s_secretrefname" {
 }
 variable "gitlab_url" { }
 variable "gitlab_token" { }
-variable "gitlab_token" { }
 variable "s3_backup_bucket_name" { }
 
 variable "s3_backup_path" {
