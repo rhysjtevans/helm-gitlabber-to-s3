@@ -4,8 +4,8 @@ variable "k8s_namespace" {
 variable "k8s_secretrefname" {
   default = "gitlabber-env"
 }
-variable "gitlab_url" { }
 
+variable "gitlab_url" { }
 variable "s3_backup_bucket_name" { }
 
 variable "s3_backup_path" {
@@ -47,4 +47,16 @@ resource "kubernetes_secret" "conf" {
     S3_BACKUP_PATH = var.s3_backup_path
     SSH_PRIVATE_KEY = tls_private_key.clone_key.private_key_openssh
   }
+}
+
+
+
+terraform {
+  required_providers {
+    gitlab = {
+      source = "gitlabhq/gitlab"
+    }
+ 
+  }
+
 }
