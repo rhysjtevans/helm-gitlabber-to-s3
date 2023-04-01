@@ -12,9 +12,7 @@ variable "s3_backup_path" {
   default = "gitlabber-backup"
 }
 
-resource "tls_private_key" "clone_key" {
-  algorithm = "ED25519"
-}
+variable "gitlab_deploy_key" {}
 
 resource "gitlab_personal_access_token" "main" {
   user_id    = 2
@@ -23,16 +21,6 @@ resource "gitlab_personal_access_token" "main" {
 
   scopes = ["api"]
 }
-
-resource "gitlab_user_sshkey" "main" {
-  user_id    = 2
-  title      = "gitlabber"
-  key        = tls_private_key.clone_key.public_key_openssh
-
-  expires_at = "2028-01-21T00:00:00.000Z"
-}
-
-
 
 resource "kubernetes_secret" "conf" {
   metadata {
@@ -45,7 +33,7 @@ resource "kubernetes_secret" "conf" {
     GITLAB_TOKEN = gitlab_personal_access_token.main.token
     S3_BACKUP_BUCKET_NAME = var.s3_backup_bucket_name
     S3_BACKUP_PATH = var.s3_backup_path
-    SSH_PRIVATE_KEY = tls_private_key.clone_key.private_key_openssh
+    SSH_PRIVATE_KEY = var.gitlab_deploy_key
   }
 }
 
