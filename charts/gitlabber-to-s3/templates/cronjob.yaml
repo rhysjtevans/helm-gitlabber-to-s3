@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "gitlabber-to-s3.fullname" . }}
+  labels:
+    {{- include "gitlabber-to-s3.labels" . | nindent 4 }}
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          {{- with .Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          labels:
+            {{- include "gitlabber-to-s3.selectorLabels" . | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: {{ include "gitlabber-to-s3.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+          - name: {{ .Chart.Name }}
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 14 }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            envFrom:
+            - secretRef:
+                name: {{ .Values.configSecretRefName }}
+            volumeMounts:
+            - name: sshprivatekey
+              mountPath: /root/.ssh/id_rsa
+              subPath: SSH_PRIVATE_KEY
+              readOnly: true
+          volumes:
+          - name: sshprivatekey
+            secret:
+              defaultMode: 384
+              secretName: {{ .Values.configSecretRefName }}

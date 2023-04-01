@@ -1,0 +1,25 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+metadata:
+    name: gitlabber-to-s3
+build:
+    tagPolicy:
+      dateTime:
+        format: "2006-01-02_15-04-05"
+        timezone: "Local"
+    local:
+      concurrency: 0
+    artifacts:
+      - image: rhysjtevans/gitlabber-to-s3
+        context: .
+        docker:
+          dockerfile: Dockerfile
+deploy:
+  helm:
+    releases:
+      - name: rx
+        chartPath: charts/gitlabber-to-s3
+        setValueTemplates:
+          image.tag: "{{.IMAGE_TAG_rhysjtevans_gitlabber_to_s3}}"
+        # valuesFiles:
+        # - /Users/rhysevans/git/homelab/helm/values/pigeono.tpl.yaml
