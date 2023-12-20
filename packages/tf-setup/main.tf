@@ -6,6 +6,7 @@ variable "k8s_secretrefname" {
 }
 
 variable "gitlab_url" { }
+
 variable "s3_backup_bucket_name" { }
 
 variable "s3_backup_path" {
@@ -18,7 +19,6 @@ resource "gitlab_personal_access_token" "main" {
   user_id    = 2
   name       = "Gitlabber-backup"
   expires_at = "2026-03-14"
-
   scopes = ["api"]
 }
 

@@ -17,7 +17,7 @@ spec:
           labels:
             {{- include "gitlabber-to-s3.selectorLabels" . | nindent 12 }}
         spec:
-          restartPolicy: OnFailure
+          restartPolicy: Never
           serviceAccountName: {{ include "gitlabber-to-s3.serviceAccountName" . }}
           securityContext:
             {{- toYaml .Values.podSecurityContext | nindent 12 }}
@@ -31,12 +31,16 @@ spec:
             - secretRef:
                 name: {{ .Values.configSecretRefName }}
             volumeMounts:
-            - name: sshprivatekey
+            - name: ssh
               mountPath: /root/.ssh/id_rsa
               subPath: SSH_PRIVATE_KEY
               readOnly: true
+            - name: ssh
+              mountPath: /root/.ssh/config
+              subPath: SSH_CONFIG
+              readOnly: true
           volumes:
-          - name: sshprivatekey
+          - name: ssh
             secret:
               defaultMode: 384
               secretName: {{ .Values.configSecretRefName }}

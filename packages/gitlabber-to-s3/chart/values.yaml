@@ -10,7 +10,8 @@ configSecretRefName: "gitlabber-to-s3"
 
 image:
   repository: rhysjtevans/gitlabber-to-s3
-  tag: latest
+  tag: 1.0.3
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
